@@ -175,6 +175,8 @@ def download_video(message, url, audio=False):
             "format": "mp4",
             "outtmpl": "outputs/%(title)s.%(ext)s",
             "progress_hooks": [progress],
+            "username": "kbqg7srd2sro1dc",
+            "password": "cznplb5at1yrten",
             "postprocessors": [
                 {  # Extract audio using ffmpeg
                     "key": "FFmpegExtractAudio",

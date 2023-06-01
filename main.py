@@ -11,7 +11,6 @@ from requests.exceptions import ReadTimeout
 import json
 from urllib.parse import urlparse
 import yt_dlp
-from yt_dlp.extractor.instagram import InstagramBaseIE
 import datetime
 import re
 import os
@@ -26,6 +25,7 @@ env = {
 bot = telebot.TeleBot(env["TG_BOT_TOKEN"])
 db_link = env["DB_LINK"]
 max_filesize = int(env["max_filesize"])
+MY_ID = int(env["MY_ID"])
 last_edited = {}
 
 REKLAMA_MSG = [
@@ -75,7 +75,7 @@ def write_to_db(message):
             conn.commit()
             conn.close()
             bot.send_message(
-                612063160,
+                MY_ID,
                 f"Ошибка при добавлении (INSERT) данных в базе Пользователь: {message.chat.id}",
             )
     else:
@@ -97,7 +97,7 @@ def write_to_db(message):
             conn.commit()
             conn.close()
             bot.send_message(
-                612063160,
+                MY_ID,
                 f"Ошибка при добавлении (INSERT) данных в базе Пользователь: {message.chat.id}",
             )
     conn.commit()
@@ -133,12 +133,11 @@ def insta_url_validation(url):
         "([^&=%\?]{11})"
     )
 
-    # insta_regex_match = re.match(insta_regex, url)
-    # if insta_regex_match:
-    #     return insta_regex_match
+    insta_regex_match = re.match(insta_regex, url)
+    if insta_regex_match:
+        return insta_regex_match
 
-    # return insta_regex_match
-    return url
+    return insta_regex_match
 
 
 def download_video(message, url, audio=False):
@@ -191,7 +190,6 @@ def download_video(message, url, audio=False):
     ) as ydl:
         try:
             info = ydl.extract_info(url, download=True)
-            # InstagramBaseIE._IS_LOGGED_IN = False
 
             bot.edit_message_text(
                 chat_id=message.chat.id,
@@ -220,7 +218,6 @@ def download_video(message, url, audio=False):
                     )
                 bot.delete_message(message.chat.id, msg.message_id)
             except Exception as e:
-                print(e)
                 bot.edit_message_text(
                     chat_id=message.chat.id,
                     message_id=msg.message_id,
@@ -231,7 +228,7 @@ def download_video(message, url, audio=False):
                 for file in info["requested_downloads"]:
                     os.remove(file["filepath"])
         except Exception as e:
-            print(e)
+            bot.send_message(MY_ID, e)
             if isinstance(e, yt_dlp.utils.DownloadError):
                 bot.edit_message_text(
                     "Неверный URL", message.chat.id, msg.message_id

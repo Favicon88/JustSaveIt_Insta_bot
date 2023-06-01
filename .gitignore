@@ -1,6 +1,7 @@
 
 yt-dlp-telegram/
 telegram-bot-api/
+cookies.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

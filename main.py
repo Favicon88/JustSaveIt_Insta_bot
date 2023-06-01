@@ -11,6 +11,7 @@ from requests.exceptions import ReadTimeout
 import json
 from urllib.parse import urlparse
 import yt_dlp
+from yt_dlp.extractor.instagram import InstagramBaseIE
 import datetime
 import re
 import os
@@ -132,11 +133,12 @@ def insta_url_validation(url):
         "([^&=%\?]{11})"
     )
 
-    insta_regex_match = re.match(insta_regex, url)
-    if insta_regex_match:
-        return insta_regex_match
+    # insta_regex_match = re.match(insta_regex, url)
+    # if insta_regex_match:
+    #     return insta_regex_match
 
-    return insta_regex_match
+    # return insta_regex_match
+    return url
 
 
 def download_video(message, url, audio=False):
@@ -175,8 +177,6 @@ def download_video(message, url, audio=False):
             "format": "mp4",
             "outtmpl": "outputs/%(title)s.%(ext)s",
             "progress_hooks": [progress],
-            "username": "nifaw25575",
-            "password": "trutrijtfioyyt",
             'cookiefile': 'cookies.txt',
             "postprocessors": [
                 {  # Extract audio using ffmpeg
@@ -191,6 +191,7 @@ def download_video(message, url, audio=False):
     ) as ydl:
         try:
             info = ydl.extract_info(url, download=True)
+            # InstagramBaseIE._IS_LOGGED_IN = False
 
             bot.edit_message_text(
                 chat_id=message.chat.id,
@@ -205,6 +206,7 @@ def download_video(message, url, audio=False):
                             info["requested_downloads"][0]["filepath"],
                             "rb",
                         ),
+                        timeout=60,
                     )
                 else:
                     bot.send_video(
@@ -213,17 +215,19 @@ def download_video(message, url, audio=False):
                             info["requested_downloads"][0]["filepath"],
                             "rb",
                         ),
+                        timeout=60,
                         supports_streaming=True,
                     )
                 bot.delete_message(message.chat.id, msg.message_id)
             except Exception as e:
+                print(e)
                 bot.edit_message_text(
                     chat_id=message.chat.id,
                     message_id=msg.message_id,
                     text=f"Не удалось отправить файл, удостоверьтесь что файл поддерживается Telegram и не превышает *{round(max_filesize / 1000000)}МБ*",
                     parse_mode="MARKDOWN",
                 )
-            finally:
+            else:
                 for file in info["requested_downloads"]:
                     os.remove(file["filepath"])
         except Exception as e:

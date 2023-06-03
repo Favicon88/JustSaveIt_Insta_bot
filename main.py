@@ -260,18 +260,20 @@ def download_video(message, url, audio=False):
 @bot.message_handler(commands=["start", "help"])
 def send_start(message):
     if message.text == "/start":
-        text = """🤖 This bot can download videos and audios from Instagram.
+        text = """🇺🇸 This bot can download videos and music from Instagram.
 Send the link, choose the format and get your file.
 
-🤖 Этот бот может скачивать видео и аудио из ВК.
+🇷🇺 Этот бот может скачивать видео и музыку из Инстаграма.
 Отправь ссылку, выбери формат и получи свой файл.
 
-/help - О боте
+/help - about bot | о боте
 
-👇Отправь ссылку и получи свой файл👇
+justsave.app - app | приложение
+
+👇 send me the link | отправь мне ссылку 👇
 """
     elif message.text == "/help":
-        text = """🔥 JustSaveIt_Instagram может скачать для вас видео ролики и аудио из Instagram.
+        text = """🔥 JustSave Instagram может скачать для вас видео ролики и аудио из Instagram.
 
 Как пользоваться:
   1. Зайдите в Instagram.

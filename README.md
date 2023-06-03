@@ -1,6 +1,6 @@
-# JustSaveIt_TikTok_bot
+# JustSaveIt_insta_bot
 
-Телеграм бот скачивальщик c VK
+Телеграм бот скачивальщик c Instagram
 
 # Для обхода ограничения в 50МБ
 
@@ -28,6 +28,6 @@ apihelper.API_URL = "http://localhost:4200/bot{0}/{1}"
 команды для сервера
 
 ```
-systemctl status justsavit-vk-bot
-systemctl restart justsavit-vk-bot
+systemctl status justsavit-instagram-bot
+systemctl restart justsavit-instagram-bot
 ```
